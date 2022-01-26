@@ -1,6 +1,13 @@
 menu "User Configuration"
 
+    config DO_BLINK
+            bool "Should the MCU blink on task2 message reception"
+            default n
+            help
+                If you get bored, reading only log messages, esp32 could blink led for you!
+
     config BLINK_GPIO
+        depends on DO_BLINK
         int "Blink GPIO number"
         range 0 48
         default 8 if IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32H2
@@ -8,13 +15,13 @@ menu "User Configuration"
         default 48 if IDF_TARGET_ESP32S3
         default 5
         help
-            GPIO number (IOxx) to blink on and off or the RMT signal for the addressable LED.
+            GPIO number (IOxx) to blink on and off.
             Some GPIOs are used for other purposes (flash connections, etc.) and cannot be used to blink.
 
     config INCREMENT_PERIOD
         int "Counter increment period in ms"
         range 10 3600000
-        default 1000
+        default 5000
         help
             Define the counter period in milliseconds.
 
@@ -22,7 +29,7 @@ menu "User Configuration"
         string "Application log tag"
         default "tag"
         help
-            Log tag used to simplify logs separation from the serial output
+            Log tag used to simplify logs separation from the serial output. Should be less than 16 characters long
 
     config QUEUE_LENGTH
             int "Queue length"

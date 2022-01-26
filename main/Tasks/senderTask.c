@@ -25,8 +25,8 @@ _Noreturn void senderTask() {
         //this will ensure stable tick rate, independent from the task code execution time and preemption
         BaseType_t res;
 
-        res = xTaskDelayUntil(&xLastWakeTime, CONFIG_INCREMENT_PERIOD);
-        if (res == pdTRUE) {
+        res = xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(CONFIG_INCREMENT_PERIOD));
+        if (res == pdFALSE) {
             ESP_LOGE(CONFIG_LOG_TAG, "Can't keep senderTask execution rate! Is CPU overloaded?");
         }
 
