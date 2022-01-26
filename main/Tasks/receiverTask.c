@@ -12,17 +12,22 @@
 
 xTaskHandle receiverTaskHandle;
 
-uint32_t lastTick = 0;
-
+/**
+ * Task receives counter values from the queue and sends them to the supplied callback
+ * @param callback Must be receiverCallback_t type [void callback(uint32_t counterValue, uint32_t period)]
+ */
 _Noreturn void receiverTask(void *callback) {
-    lastTick = xTaskGetTickCount();
+    uint32_t lastTick = xTaskGetTickCount();
+
     while (true) {
-        uint32_t counterValue = 0;
-        BaseType_t val = xQueueReceive(queue, &counterValue, portMAX_DELAY);
-        if (val == pdTRUE) {
+        uint32_t counterValue = 0;  //received counter value
+        BaseType_t res = xQueueReceive(queue, &counterValue, portMAX_DELAY);
+
+        if (res == pdTRUE) {
             uint32_t currentTick = xTaskGetTickCount();
             ((receiverCallback_t) callback)(counterValue, pdTICKS_TO_MS(currentTick - lastTick));
             lastTick = currentTick;
         }
+
     }
 }

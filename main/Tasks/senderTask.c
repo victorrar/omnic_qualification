@@ -12,19 +12,29 @@
 
 xTaskHandle senderTaskHandle;
 
+/**
+ * Task sends counter value every CONFIG_LOG_TAG milliseconds to the queue
+ * period can be set via idf.py menuconfig
+ */
 _Noreturn void senderTask() {
     TickType_t xLastWakeTime;
     uint32_t counter = 0;
+
     xLastWakeTime = xTaskGetTickCount();
-    while(1){
+    while (1) {
+        //this will ensure stable tick rate, independent from the task code execution time and preemption
+        BaseType_t res;
 
-        BaseType_t res = xQueueSend(queue, &counter, 0);
+        res = xTaskDelayUntil(&xLastWakeTime, CONFIG_INCREMENT_PERIOD);
+        if (res == pdTRUE) {
+            ESP_LOGE(CONFIG_LOG_TAG, "Can't keep senderTask execution rate! Is CPU overloaded?");
+        }
 
-        if(res == pdFALSE){
-            ESP_LOGE(CONFIG_LOG_TAG, "Queue overrun!");
+        res = xQueueSend(queue, &counter, 0);
+        if (res == pdFALSE) {
+            ESP_LOGE(CONFIG_LOG_TAG, "senderTask's queue overrun!");
         }
 
         counter++;
-        vTaskDelayUntil(&xLastWakeTime, CONFIG_INCREMENT_PERIOD);
     }
 }

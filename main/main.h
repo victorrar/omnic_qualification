@@ -7,4 +7,6 @@
 
 extern xQueueHandle queue;
 
+void loggerCallback(uint32_t counterValue, uint32_t period);
+
 #endif //OMNIC_QUALIFICATION_MAIN_H
