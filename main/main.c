@@ -1,12 +1,10 @@
-#include <stdio.h>
+#include <stdint.h>
 #include <esp_log.h>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <freertos/queue.h>
 
-
-#include "Tasks/sync.h"
 #include "sdkconfig.h"
 
 #include "senderTask.h"
@@ -27,5 +25,5 @@ void app_main(void)
 }
 
 void loggerCallback(uint32_t counterValue, uint32_t period){
-    ESP_LOGI(CONFIG_LOG_TAG, "Counter value: %d. Time elapsed from previous reception: %d", counterValue, period);
+    ESP_LOGI(CONFIG_LOG_TAG, "Counter value: %d. Time elapsed from previous reception: %d ms", counterValue, period);
 }
