@@ -1,2 +1,2 @@
-idf_component_register(SRCS "omnic_qualification.c"
-                    INCLUDE_DIRS ".")
+idf_component_register(SRC_DIRS "." "Tasks"
+                    INCLUDE_DIRS "." "Tasks")
